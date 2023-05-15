@@ -1,0 +1,106 @@
+# Copyright 2023 Undistro Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: config
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: myapp
+  namespace: app
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  namespace: app
+  labels:
+    app: myapp
+spec:
+  serviceAccountName: myapp
+  volumes:
+    - name: global-config
+      emptyDir: {}
+  initContainers:
+    - name: global-config
+      image: ghcr.io/undistro/kubexns:latest
+      volumeMounts:
+        - mountPath: "/tmp/.config"
+          name: global-config
+      env:
+        - name: DIR
+          value: "/tmp/.config"
+        - name: CONFIGMAPS
+          value: "config/global-config"
+        - name: SECRETS_SELECTOR
+          value: "foo=bar"
+  containers:
+    - name: bash
+      image: bash:latest
+      imagePullPolicy: IfNotPresent
+      command: ["watch"]
+      args: ["ls", "-lha", "/tmp/.config"]
+      volumeMounts:
+        - mountPath: "/tmp/.config"
+          name: global-config
+  restartPolicy: Always
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-config
+  namespace: config
+data:
+  config.yaml: >
+    key: value
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: global-cred
+  namespace: config
+  labels:
+    foo: bar
+data:
+  cred.yaml: Zm9vOiBiYXIK
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: config-viewer
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: myapp-config-viewer
+roleRef:
+  kind: ClusterRole
+  name: config-viewer
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: myapp
+    namespace: app
