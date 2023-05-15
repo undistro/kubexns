@@ -30,6 +30,7 @@ type Options struct {
 
 	DefaultMode        os.FileMode
 	Dir                string
+	IgnoreNotFound     bool
 	ConfigMaps         []types.NamespacedName
 	Secrets            []types.NamespacedName
 	ConfigMapsSelector string
@@ -45,6 +46,11 @@ func NewFromEnv() *Options {
 		opts.Dir = v
 	} else {
 		opts.Dir = "/tmp"
+	}
+	if v, ok := os.LookupEnv("IGNORE_NOT_FOUND"); ok {
+		opts.IgnoreNotFound, _ = strconv.ParseBool(v)
+	} else {
+		opts.IgnoreNotFound = false
 	}
 	if v, ok := os.LookupEnv("CONFIGMAPS"); ok {
 		opts.ConfigMaps = parseNamespacedNames(v)
