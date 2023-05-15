@@ -66,7 +66,7 @@ spec:
 | `SECRETS`             | A comma-separated list of `Secrets` namespaced names (`ns1/sec,ns2/sec`)                                                                              | -       |
 | `CONFIGMAPS_SELECTOR` | A label selector to match `ConfigMaps` (`foo=bar`)                                                                                                    | -       |
 | `SECRETS_SELECTOR`    | A label selector to match `Secrets` (`foo=bar`)                                                                                                       | -       |
-| `IGNORE_NOT_FOUND`    | Specifies when the not found errors should be ignored                                                                                                 | 'false' |
+| `IGNORE_NOT_FOUND`    | Specifies when not found errors should be ignored                                                                                                     | `false` |
 
 # Contributing
 
