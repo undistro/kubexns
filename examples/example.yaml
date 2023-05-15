@@ -42,7 +42,7 @@ spec:
       emptyDir: {}
   initContainers:
     - name: global-config
-      image: ghcr.io/undistro/kubexns:latest
+      image: ghcr.io/undistro/kubexns:v0.1.0
       volumeMounts:
         - mountPath: "/tmp/.config"
           name: global-config

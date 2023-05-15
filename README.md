@@ -1,5 +1,11 @@
 # kubexns
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/undistro/kubexns.svg)](https://pkg.go.dev/github.com/undistro/kubexns)
+[![test](https://github.com/undistro/kubexns/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/undistro/kubexns/actions/workflows/test.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/undistro/kubexns)](https://goreportcard.com/report/github.com/undistro/kubexns)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/undistro/kubexns?sort=semver&color=brightgreen)
+![GitHub](https://img.shields.io/github/license/undistro/kubexns?color=brightgreen)
+
 Kubexns (short for "Kubernetes Cross Namespaces") is a container solution 
 that enables the mapping of `ConfigMaps` or `Secrets` from different namespaces 
 as volumes in Kubernetes Pods using an `initContainer`.
@@ -27,7 +33,7 @@ spec:
       emptyDir: {}
   initContainers:
     - name: global-config
-      image: ghcr.io/undistro/kubexns:latest
+      image: ghcr.io/undistro/kubexns:v0.1.0
       volumeMounts:
         - mountPath: "/tmp/.config"
           name: global-config
