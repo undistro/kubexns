@@ -58,7 +58,7 @@ spec:
 
 ### Environment variables
 
-| name                  | description                                                                                                                                           | default |
+| Name                  | Description                                                                                                                                           | Default |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
 | `DIR`                 | The directory path where the files should be placed.                                                                                                  | `/tmp`  |
 | `DEFAULT_MODE`        | The mode bits used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511. | `0644`  |
