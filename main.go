@@ -22,6 +22,7 @@ import (
 	"path"
 
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
@@ -47,12 +48,18 @@ func main() {
 	for _, nn := range opts.ConfigMaps {
 		cm, err := client.ConfigMaps(nn.Namespace).Get(ctx, nn.Name, metav1.GetOptions{})
 		if err != nil {
+			if errors.IsNotFound(err) && opts.IgnoreNotFound {
+				continue
+			}
 			log.Fatalln("failed to get ConfigMap:", err)
 		}
 		configMaps = append(configMaps, *cm)
 	}
 	for _, nn := range opts.Secrets {
 		sec, err := client.Secrets(nn.Namespace).Get(ctx, nn.Name, metav1.GetOptions{})
+		if errors.IsNotFound(err) && opts.IgnoreNotFound {
+			continue
+		}
 		if err != nil {
 			log.Fatalln("failed to get Secret:", err)
 		}
