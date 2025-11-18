@@ -1,6 +1,6 @@
 module github.com/undistro/kubexns
 
-go 1.22.5
+go 1.25.4
 
 require (
 	k8s.io/api v0.30.0
