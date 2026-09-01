@@ -17,3 +17,8 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    groups:
+      kubernetes-dependencies:
+        patterns:
+          - "k8s.io/*"
+          - "sigs.k8s.io/*"
